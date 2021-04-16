@@ -1,19 +1,20 @@
 {
-  "name": "myvaxxid.com",
+  "name": "server",
   "version": "1.0.0",
-  "description": "ERC 721 passport \u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[1;5D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[C\u001b[CToken ERC721 passport digital",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/murielfelipe/myvaxxid.git"
-  },
-  "author": "Felipe Muriel - Mattew Glezos",
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/murielfelipe/myvaxxid/issues"
-  },
-  "homepage": "https://github.com/murielfelipe/myvaxxid#readme"
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "express": "^4.17.1",
+    "https": "^1.0.0",
+    "jsonwebtoken": "^8.5.1"
+  }
 }
