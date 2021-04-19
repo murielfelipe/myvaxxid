@@ -2,8 +2,8 @@ import React from 'react';
 
 class Camera  extends React.Component {
 
-    width = 0
-    height = 0
+    width = 600
+    height = 600
 
     video= null
     context= null
@@ -26,31 +26,58 @@ class Camera  extends React.Component {
         this.startCamera()
     }
 
+    componentWillUnmount(){
+        this.stop()
+    }
 
-    startCamera(w = 680, h = 480) {
+
+    startCamera() {
         if (window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) {
-            this.width = w;
-            this.height = h;
 
+            window.navigator.mediaDevices.getUserMedia({
+                video: true,
+                facingMode: {
+                  ideal: 'environment'
+                },
+                frameRate:{
+                    ideal: 25,
+                    min: 10,
+                }
+            }).then((stream)=> {
+                this.video.srcObject = stream;
+                this.video.play();
 
-            (function (video) {
-                window.navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    facingMode: {
-                      exact: 'environment'
-                    }
-                }).then(function (stream) {
-                    video.srcObject = stream;
-                    video.play();
-                });
-            })(this.video)
+                this.stream = stream
+
+            }).catch((err)=>{
+                alert('camera' + err)
+            });
 
         }
     }
 
+    stop(){
+        this.stream.getTracks().forEach(function(track) {
+            track.stop();
+        });
+    }
+
 
     takeSnapshot() {
+
+        this.width = this.video.videoWidth;
+        this.height = this.video.videoHeight;
+
+        this.canvas.width = this.video.videoWidth;
+        this.canvas.height = this.video.videoHeight;
+
+
         this.context.drawImage(this.video, 0, 0, this.width, this.height);
+
+        var dataUrl = this.refCanvas.current.toDataURL('image/png');
+        if (this.props.onPhoto) {
+            this.props.onPhoto(dataUrl);
+        }
     }
 
     render(){

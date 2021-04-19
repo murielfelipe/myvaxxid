@@ -12,6 +12,21 @@ const port = 9000
 
 
 const SECURE_PATH = './../shared/security/'
+const APP_PATH = './../gui/build/'
+
+
+const database = require('./core/database');
+
+// Webservices
+const SecurityWebservice = require('./webservices/security');
+const PharmacistWebservice = require('./webservices/pharmacist');
+
+
+
+
+app.use('/security', SecurityWebservice);
+app.use('/pharmacist', PharmacistWebservice);
+
 
 
 var { encrypt, decrypt} = require(SECURE_PATH +'crypto')
@@ -21,8 +36,13 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json({limit:'10mb'}))
 app.use(cookieParser());
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
+app.use(express.static(APP_PATH));
+
+
+app.get('/database', (req, res) => {
+
+
+  res.send({da: database()})
 })
 
 app.post('/*', (req, res)=> {
@@ -68,6 +88,47 @@ app.post('/login', (req, res) => {
     token
   })
 })
+
+
+app.post('/savePhoto', (req, res) => {
+  var photo = req.body.photo
+  var token = req.body.token
+
+  fs.writeFile(token +".pic", photo,()=>{
+    res.send({
+      token
+    })
+  });
+
+})
+
+
+app.post('/getPhoto', (req, res) => {
+  var token = req.body.token
+
+  fs.readFile(token +".pic",'utf8',  (err, data) => {
+    if (err) {
+      res.send({
+        result: 'fail',
+        photo: data,
+      })
+
+    } else {
+
+
+      fs.unlink(token +".pic",(err, data) => {});
+
+      res.send({
+        photo: data,
+        result: 'ok',
+      })
+
+      
+    }
+  });
+
+})
+
 
 
 // app.listen(port, () => {

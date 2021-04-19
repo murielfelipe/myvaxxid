@@ -114,6 +114,10 @@ img.logo-login {
     margin-bottom: 16px;
 }
 
+.pharmacist-dialog.modal-body {
+    text-align: center;
+}
+
 video.camera-video {
     width: 100%;
     background: #000;
