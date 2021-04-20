@@ -1,9 +1,8 @@
 const crypto = require('crypto');
 const fs = require('fs');
 
-const SECURE_PATH = './../shared/security/'
 
-const secretKey = fs.readFileSync(SECURE_PATH + '/key.data', {encoding:'utf8', flag:'r'});
+const secretKey = fs.readFileSync(__dirname +'/key.data', {encoding:'utf8', flag:'r'});
 
 
 const algorithm = 'aes-256-ctr';

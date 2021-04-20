@@ -12,9 +12,9 @@ class App  extends React.Component {
     }
 
     window.logout = this.logout.bind(this)
-}
-  services(){
-    this.setState({panel: <Services />})
+  }
+  services(gui){
+    this.setState({panel: <Services gui={gui} />})
   }
 
   logout(){

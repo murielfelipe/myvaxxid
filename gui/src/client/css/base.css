@@ -74,11 +74,29 @@ img.logo-login {
 }
 
 .pharmacist-header img {
-    width: 80px;
+    width: 200px;
+}
+
+.btnbackground{
+    background-color: #16C4F0 !important;
+    border-color: #16B9FF !important;
+}
+
+.btnbackground:hover{
+    background-color: #16B9FF !important;
+    border-color: #16B9FF !important;
 }
 
 .pharmacist-header button.btn-logout {
     float: right;
+    margin-top: 20px;
+    background-color: #16C4F0;
+    border-color: #16B9FF;
+}
+
+.pharmacist-header button.btn-logout:hover {
+    background-color: #16B9FF;
+    border-color: #16B9FF;
 }
 
 .pharmacist-header label {
@@ -118,6 +136,34 @@ img.logo-login {
     text-align: center;
 }
 
+
+/* pharmacist */
+p.subtitle {
+    color: #16C4F0;
+    font-weight: bold;
+    font-size: 18px;
+    border-bottom: 1px solid #16C4F0;
+}
+
+
+
+/*Camera*/
+.camera-frame {
+    width: 350px;
+    height: 350px;
+    position: absolute;
+    left: 58px;
+    top: 2px;
+    border: 6px solid #007bff;
+    box-shadow: 0 0 0 80px #ffffff;
+}
+
+
+.camera-container {
+    overflow: hidden;
+    position: relative;
+}
+
 video.camera-video {
     width: 100%;
     background: #000;
@@ -128,4 +174,68 @@ canvas.camera-canvas {
 }
 
 
+@media (max-width: 600px) {
+    .camera-frame {
+        width: 308px;
+        height: 308px;
+        position: absolute;
+        left: 0px;
+        top: 56px;
+        border: 6px solid #007bff;
+        box-shadow: 0 0 0 80px #ffffff;
+    }
 
+}
+
+
+/*checker*/
+
+.pharmacist-check {
+    background: #4caf50;
+    width: 74px;
+    height: 68px;
+    border-radius: 8px;
+    position: absolute;
+    top: -16px;
+}
+
+.pharmacist-check:after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 8px;
+    background: #fff;
+    top: 32px;
+    left: 20px;
+    transform: rotate(-45deg);
+}
+
+.pharmacist-check:before {
+    content: '';
+    position: absolute;
+    width: 27px;
+    height: 8px;
+    background: #fff;
+    top: 40px;
+    left: 10px;
+    transform: rotate(45deg);
+}
+
+
+.pharmacist-check.error-patient {
+    background: #f44336;
+}
+
+.pharmacist-check.error-patient:after {
+    width: 50px;
+    height: 8px;
+    top: 32px;
+    left: 12px;
+}
+
+.pharmacist-check.error-patient:before {
+    width: 50px;
+    height: 8px;
+    top: 32px;
+    left: 12px;
+}

@@ -4,6 +4,10 @@ import './css/base.css';
 import Camera from './camera';
 import QRCode from "react-qr-code";
 import QrReader from 'react-qr-reader'
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
+
+
+import Ws from './../webservice';
 
 
 class Pharmacist extends React.Component {
@@ -11,16 +15,27 @@ class Pharmacist extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            // form
+            valuename: "",
+            valuecardid: "",
+            valueemail: "",
+            valuephone: "",
+            valuebirth: "",
+            valuevaccine: "",
             valueuser: "",
-            valuepassword: "",
+            valuelotnumber: "",
+
+            // end form
             showCamera: false,
             result: 'No result',
             token: 'UywQlzLGGC1SWtwqZfvt71YCJIhOApZXVVscWWoRMMrFYRDCpoD6QzQWJWqpUUefReHcB3Cw3ZWGDykS1oiU6nZWs6FBazRHEDYQsf9GwTWYLYh20ZWsCna4KJNhK8cT',
             typePhoto: null,
+            vaccines: [],
+
         }
 
         this.handleCamera = this.handleCamera.bind(this);
-        this.validateUser = this.validateUser.bind(this);
+        this.saveVaccineData = this.saveVaccineData.bind(this);
         this.handleCloseCamera = this.handleCloseCamera.bind(this);
         this.handleScan = this.handleScan.bind(this);
         this.handleError = this.handleError.bind(this);
@@ -39,38 +54,28 @@ class Pharmacist extends React.Component {
 
     }
 
+
+    componentDidMount(){
+       this.onGetVaccine()
+    }
+
+    componentWillUnmount(){
+
+    }
+
     onSavePhoto(){
-        var url = 'https://'+window.location.host.split(':')[0]+':9000/savePhoto';
-        var data = {
+
+        Ws('pharmacist/savePhoto', {
             token: this.state.result,
             photo: this.refImage.current.src,
-        };
-
-        fetch(url, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
-
-            
-        }).catch(error => console.error('Error:', error))
+        })
     }
 
     onGetPhoto(){
-        var url = 'https://'+window.location.host.split(':')[0]+':9000/getPhoto';
-        var data = {
-            token: this.state.token,
-        };
 
-        fetch(url, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json()).then(response => {
+        Ws('pharmacist/getPhoto', {
+            token: this.state.token,
+        }).then(response => {
 
             if (response.result=='ok') {
                 this.refImage.current.src = response.photo
@@ -84,6 +89,15 @@ class Pharmacist extends React.Component {
             }
         }).catch(error => console.error('Error:', error))
     }
+
+    onGetVaccine(){
+
+        Ws('pharmacist/getVaccine', {}).then(response => {
+
+            this.setState({vaccines: response.vaccines})
+        })
+    }
+
 
 
     onClickCamera() {
@@ -157,8 +171,34 @@ class Pharmacist extends React.Component {
     }
 
 
-    validateUser(event) {
+    saveVaccineData(event) {
         event.preventDefault();
+
+
+        Ws('pharmacist/saveData', {
+            valuename: this.state.valuename,
+            valuecardid: this.state.valuecardid,
+            valueemail: this.state.valueemail,
+            valuephone: this.state.valuephone,
+            valuebirth: this.state.valuebirth,
+            valuevaccine: this.state.valuevaccine,
+            valuelotnumber: this.state.valuelotnumber,
+
+            valuephoto: this.refImage.current.src,
+            token: this.state.token,
+        }).then(response => {
+
+            if (response.result=='ok') {
+               
+
+            }
+              
+        })
+
+
+
+
+
         
     }
 
@@ -188,73 +228,82 @@ class Pharmacist extends React.Component {
 
 
                         <Form className="form-patient">
+                            <p className="subtitle">Patient</p>
                             <Form.Group>
-                                <Form.Label>Username</Form.Label>
+                                <Form.Label>Name</Form.Label>
                                 <Form.Control type="text" placeholder="Enter user"
                                     onChange={(ev) =>
-                                        this.setState({ valueuser: ev.target.value })
+                                        this.setState({ valuename: ev.target.value })
                                     }
                                 />
                             </Form.Group>
 
                             <Form.Group>
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control type="text" placeholder="Enter user"
+                                <Form.Label>Health card ID</Form.Label>
+                                <Form.Control type="number" placeholder="Enter user"
                                     onChange={(ev) =>
-                                        this.setState({ valueuser: ev.target.value })
+                                        this.setState({ valuecardid: ev.target.value })
                                     }
                                 />
                             </Form.Group>
 
                             <Form.Group>
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control type="text" placeholder="Enter user"
+                                <Form.Label>Email</Form.Label>
+                                <Form.Control type="email" placeholder="Enter user"
                                     onChange={(ev) =>
-                                        this.setState({ valueuser: ev.target.value })
+                                        this.setState({ valueemail: ev.target.value })
                                     }
                                 />
                             </Form.Group>
 
                             <Form.Group>
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control type="text" placeholder="Enter user"
+                                <Form.Label>Phone</Form.Label>
+                                <Form.Control type="number" placeholder="Enter user"
                                     onChange={(ev) =>
-                                        this.setState({ valueuser: ev.target.value })
+                                        this.setState({ valuephone: ev.target.value })
+                                    }
+                                />
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label>Date of bird</Form.Label>
+                                <Form.Control type="date" placeholder="Enter user"
+                                    onChange={(ev) =>
+                                        this.setState({ valuebirth: ev.target.value })
                                     }
                                 />
                             </Form.Group>
 
                             <Form.Group controlId="exampleForm.ControlSelect1">
-                                <Form.Label>Example select</Form.Label>
-                                <Form.Control as="select">
-                                  <option>1</option>
-                                  <option>2</option>
-                                  <option>3</option>
-                                  <option>4</option>
-                                  <option>5</option>
+                                <Form.Label>Product name</Form.Label>
+                                <Form.Control as="select"
+
+                                    onChange={(ev) =>
+                                        this.setState({ valuevaccine: ev.target.value })
+                                    }
+                                >
+                                    <option value={0}></option>
+
+                                    {
+                                        this.state.vaccines.map((vaccine)=>{
+                                            return <option value={vaccine.id} key={vaccine.id}>{vaccine.productName}</option>
+                                        })
+                                    }
                                 </Form.Control>
                             </Form.Group>
 
                             <Form.Group>
-                                <Form.Label>Username</Form.Label>
+                                <Form.Label>Lot number</Form.Label>
                                 <Form.Control type="text" placeholder="Enter user"
                                     onChange={(ev) =>
-                                        this.setState({ valueuser: ev.target.value })
+                                        this.setState({ valuelotnumber: ev.target.value })
                                     }
                                 />
                             </Form.Group>
 
-                            <Form.Group>
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control type="text" placeholder="Enter user"
-                                    onChange={(ev) =>
-                                        this.setState({ valueuser: ev.target.value })
-                                    }
-                                />
-                            </Form.Group>
                             
-                            <Button variant="primary" type="submit" onClick={this.validateUser} block>
-                                Sign In
+                            <Button className="btnbackground" variant="primary" type="submit" onClick={this.saveVaccineData} block>
+                                Save <SaveAltIcon></SaveAltIcon>
                             </Button>
                         </Form>
 
@@ -268,13 +317,13 @@ class Pharmacist extends React.Component {
                     <img ref={this.refImage} src="img/photo.jpg" className="pharmacist-img" /> 
 
                     <div className="pharmacist-buttons">
-                        <Button variant="primary" type="submit" onClick={this.onClickExplore} title="Explore photo" >
+                        <Button className="btnbackground" variant="primary" type="submit" onClick={this.onClickExplore} title="Explore photo" >
                             <span className="material-icons">folder_open</span>
                         </Button>
-                        <Button variant="primary" type="submit" onClick={this.onClickCamera}  title="Take a picture">
+                        <Button className="btnbackground" variant="primary" type="submit" onClick={this.onClickCamera}  title="Take a picture">
                             <span className="material-icons">photo_camera</span>
                         </Button>
-                        <Button variant="primary" type="submit" onClick={this.onClickQr}  title="Take a picture phone">
+                        <Button className="btnbackground" variant="primary" type="submit" onClick={this.onClickQr}  title="Take a picture phone">
                             <span className="material-icons">qr_code_2</span>
                         </Button>
                     </div>
@@ -290,15 +339,15 @@ class Pharmacist extends React.Component {
 
                     <div className="pharmacist-buttons">
 
-                        <Button variant="primary" type="submit" onClick={this.onClickCamera}  title="Take a picture">
+                        <Button className="btnbackground" variant="primary" type="submit" onClick={this.onClickCamera}  title="Take a picture">
                             <span className="material-icons">photo_camera</span>
                         </Button>
                      
-                        <Button variant="primary" type="submit" onClick={this.onClickQrReader}  title="Take a picture phone">
+                        <Button className="btnbackground" variant="primary" type="submit" onClick={this.onClickQrReader}  title="Take a picture phone">
                             <span className="material-icons">qr_code_2</span>
                         </Button>
 
-                         <Button variant="success" type="submit" onClick={this.onSavePhoto}  title="Take a picture phone">
+                         <Button className="btnbackground" variant="success" type="submit" onClick={this.onSavePhoto}  title="Take a picture phone">
                             <span className="material-icons">check</span>
                         </Button>
                     </div>
@@ -309,14 +358,13 @@ class Pharmacist extends React.Component {
 
 
 
-
                 </Row>
 
-                <div className="login-footer">
-
-                </div>
 
 
+                <br/>
+                <br/>
+                <br/>
 
                 <Modal show={this.state.showCamera} onHide={this.handleCloseCamera}>
                     <Modal.Header closeButton>

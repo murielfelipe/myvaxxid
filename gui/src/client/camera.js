@@ -81,7 +81,8 @@ class Camera  extends React.Component {
     }
 
     render(){
-        return(<div>
+        return(<div className="camera-container">
+            <div className="camera-frame" ></div>
             <video className="camera-video" ref={this.refVideo} autoPlay>camera</video>
             <canvas className="camera-canvas" ref={this.refCanvas}></canvas>
         </div>)

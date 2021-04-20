@@ -2,12 +2,15 @@ import React from 'react';
 import { Button, Form, Modal, Container, Navbar, Nav } from 'react-bootstrap';
 import './css/base.css';
 
+import Ws from './../webservice';
+
 
 class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            valueuser: "client1",
+            valueuser: "",
+            // valueuser: "client1",
             valuepassword: "client1",
             showAlertLogin: false,
         }
@@ -18,50 +21,31 @@ class Login extends React.Component {
     validateUser(event) {
         event.preventDefault();
         if (this.state.valueuser !== '') {
-            var url = 'https://'+window.location.host.split(':')[0]+':9000/login';
-            var data = {
+         
+
+            Ws('security/login', {
                 username: this.state.valueuser,
                 password: this.state.valuepassword
-            };
+            }).then(response => {
 
-            fetch(url, {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json'
+                if (response.error === 401) { // Unauthorized
+                    this.setState({ showAlertLogin: true });
+                    return;
                 }
-            })
-                .catch(err => {
-                    console.log("OOPS", err);
-                    if (err.status === 401) {
-                        console.log("nailed it");
-                    }
-                })
-                .then(res => {
-                    if (res.status === 401) { // Unauthorized
-                        this.setState({ showAlertLogin: true });
-                        return;
-                    }
-                    return res.json();
-                })
-                .then(response => {
 
-                    if (response.error !== 'Invalid user') {
-                        if (response.loggedinuser === this.state.valueuser) {
-                            console.log(`User '${response.loggedinuser}' logged in`);
-                        }
-                        if (this.props.onlogin) {
-                            localStorage.userValue = this.state.valueuser;
-                            localStorage.token = response.token;
-
-                            this.props.onlogin();
-                        }
-                    } else {
-                        this.setState({ showAlertLogin: true });
+                if (response.error !== 'Invalid user') {
+                    if (response.loggedinuser === this.state.valueuser) {
+                        console.log(`User '${response.loggedinuser}' logged in`);
                     }
-                })
-                .catch(error => console.error('Error:', error))
-            ;
+                    if (this.props.onlogin) {
+                        localStorage.userValue = this.state.valueuser;
+                        localStorage.token = response.token;
+                        this.props.onlogin( response.rol );
+                    }
+                } else {
+                    this.setState({ showAlertLogin: true });
+                }
+            });
         }
     }
 
@@ -82,7 +66,7 @@ class Login extends React.Component {
                     <Form className="marginTop15">
                         <Form.Group controlId="formGroupEmail">
                             <Form.Label>Username</Form.Label>
-                            <Form.Control type="text" placeholder="Enter user" value="client1"
+                            <Form.Control type="text" placeholder="Enter user" 
                                 onChange={(ev) =>
                                     this.setState({ valueuser: ev.target.value })
                                 }

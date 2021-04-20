@@ -11,16 +11,12 @@ const Vaccine = sequelize.define('Vaccine', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  lotNumber: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
   quantityDose: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false
   },
-  dateInmunity: {
-    type: DataTypes.STRING,
+  inmunityDate: {
+    type: DataTypes.INTEGER,
     allowNull: false
   },
   
@@ -28,6 +24,6 @@ const Vaccine = sequelize.define('Vaccine', {
   // Other model options go here
 });
 
-Vaccine.sync()
+Vaccine.sync({alter:true})
 
 module.exports = Vaccine
