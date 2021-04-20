@@ -14,7 +14,7 @@ const Sender =  function(qrCode, email, patient){
      secure: true,      
      auth: {          
       user: 'myvaxxid@sys-group.net',          
-      pass: '(Obu?!+mT+nV'      
+      pass: ''      
       },
       debug: true    
     }
