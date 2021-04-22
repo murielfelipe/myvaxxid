@@ -48,7 +48,7 @@ class Services  extends React.Component {
                     <img className="logo-login" src="logo.png" alt="Logo"/>
 
                     <label></label>
-                    <Button className="btn-logout" variant="primary"  >
+                    <Button className="btn-logout" variant="primary" onClick={this.logout} >
                         <ExitToAppOutlinedIcon>Sign out</ExitToAppOutlinedIcon>
 					</Button>
                 </div>

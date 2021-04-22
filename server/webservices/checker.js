@@ -33,8 +33,8 @@ router.post('/vaccine', function(req, res) {
 
 		Patientdata.findOne({ where: {nonceNumber: token}}).then((patient=>{
 
-			let hash = generate(patient.datavalues)
-    		console.log(hash)
+			// let hash = generate(patient.dataValues)
+   //  		console.log(hash)
 
 
 			res.send({

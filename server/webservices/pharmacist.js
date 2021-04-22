@@ -86,7 +86,7 @@ router.post('/saveData', (req, res) => {
         HealthCardID: valuecardid,
         Email: valueemail,
         Phone: valuephone,
-        PhotoURL: valuephoto,
+        PhotoURL: '',
         DateOfBird: valuebirth,
         VaccineId: valuevaccine,
         LotNumber: valuelotnumber,

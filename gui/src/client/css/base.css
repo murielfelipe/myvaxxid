@@ -239,3 +239,12 @@ canvas.camera-canvas {
     top: 32px;
     left: 12px;
 }
+
+
+.btn-center {
+    width: 50%;
+}
+
+span.material-icons {
+    vertical-align: bottom;
+}

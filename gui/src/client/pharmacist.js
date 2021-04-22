@@ -46,7 +46,7 @@ class Pharmacist extends React.Component {
         this.onClickQr = this.onClickQr.bind(this);
         this.onClickQrReader = this.onClickQrReader.bind(this);
         this.onSavePhoto = this.onSavePhoto.bind(this);
-
+        this.cancel = this.cancel.bind(this);
 
         this.refCamera = React.createRef();
         this.refInputFile = React.createRef();
@@ -69,6 +69,23 @@ class Pharmacist extends React.Component {
             token: this.state.result,
             photo: this.refImage.current.src,
         })
+    }
+
+    cancel(){
+
+        this.setState({
+            valuename: "",
+            valuecardid: "",
+            valueemail: "",
+            valuephone: "",
+            valuebirth: "",
+            valuevaccine: "",
+            valueuser: "",
+            valuelotnumber: "",
+        })
+        this.refImage.current.src = "img/photo.jpg";
+
+
     }
 
     onGetPhoto(){
@@ -190,6 +207,8 @@ class Pharmacist extends React.Component {
 
             if (response.result=='ok') {
                
+               alert("Success! The patients informed has been submitted to the blockchain")
+
 
             }
               
@@ -232,6 +251,7 @@ class Pharmacist extends React.Component {
                             <Form.Group>
                                 <Form.Label>Name</Form.Label>
                                 <Form.Control type="text" placeholder="Enter user"
+                                    value={this.state.valuename}
                                     onChange={(ev) =>
                                         this.setState({ valuename: ev.target.value })
                                     }
@@ -241,6 +261,7 @@ class Pharmacist extends React.Component {
                             <Form.Group>
                                 <Form.Label>Health card ID</Form.Label>
                                 <Form.Control type="number" placeholder="Enter user"
+                                    value={this.state.valuecardid}
                                     onChange={(ev) =>
                                         this.setState({ valuecardid: ev.target.value })
                                     }
@@ -250,6 +271,7 @@ class Pharmacist extends React.Component {
                             <Form.Group>
                                 <Form.Label>Email</Form.Label>
                                 <Form.Control type="email" placeholder="Enter user"
+                                    value={this.state.valueemail}
                                     onChange={(ev) =>
                                         this.setState({ valueemail: ev.target.value })
                                     }
@@ -259,6 +281,7 @@ class Pharmacist extends React.Component {
                             <Form.Group>
                                 <Form.Label>Phone</Form.Label>
                                 <Form.Control type="number" placeholder="Enter user"
+                                    value={this.state.valuephone}
                                     onChange={(ev) =>
                                         this.setState({ valuephone: ev.target.value })
                                     }
@@ -268,6 +291,7 @@ class Pharmacist extends React.Component {
                             <Form.Group>
                                 <Form.Label>Date of bird</Form.Label>
                                 <Form.Control type="date" placeholder="Enter user"
+                                    value={this.state.valuebirth}
                                     onChange={(ev) =>
                                         this.setState({ valuebirth: ev.target.value })
                                     }
@@ -277,7 +301,7 @@ class Pharmacist extends React.Component {
                             <Form.Group controlId="exampleForm.ControlSelect1">
                                 <Form.Label>Product name</Form.Label>
                                 <Form.Control as="select"
-
+                                    value={this.state.valuevaccine}
                                     onChange={(ev) =>
                                         this.setState({ valuevaccine: ev.target.value })
                                     }
@@ -295,6 +319,7 @@ class Pharmacist extends React.Component {
                             <Form.Group>
                                 <Form.Label>Lot number</Form.Label>
                                 <Form.Control type="text" placeholder="Enter user"
+                                    value={this.state.valuelotnumber}
                                     onChange={(ev) =>
                                         this.setState({ valuelotnumber: ev.target.value })
                                     }
@@ -302,7 +327,11 @@ class Pharmacist extends React.Component {
                             </Form.Group>
 
                             
-                            <Button className="btnbackground" variant="primary" type="submit" onClick={this.saveVaccineData} block>
+                            <Button variant="default" className="btn-center"  onClick={this.cancel} >
+                                Clear  <span className="material-icons">close</span>
+                            </Button>
+
+                              <Button className="btnbackground btn-center" variant="primary"  onClick={this.saveVaccineData} >
                                 Save <SaveAltIcon></SaveAltIcon>
                             </Button>
                         </Form>
