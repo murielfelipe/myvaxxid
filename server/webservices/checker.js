@@ -36,8 +36,14 @@ router.post('/vaccine', function(req, res) {
 			// let hash = generate(patient.dataValues)
    //  		console.log(hash)
 
+   			let today =  parseInt(moment().format('YYYY-MM-DD').replace(/[-]/gmi,''))
+   			let inmunity = parseInt(patient.dataValues.inmunityDate.replace(/[-]/gmi,''))
+
 
 			res.send({
+				isValid: inmunity <= today,
+				today: today,
+				inmunity: inmunity,
 				patient: patient,
 				photo: data,
 			});

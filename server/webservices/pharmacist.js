@@ -96,8 +96,8 @@ router.post('/saveData', (req, res) => {
         quantityDose: 1,
         doseNumber: 1,
         
-        inmunityDate: moment().format('YYYY-MM-DD'),
-        vaccinationDate: moment().add(vaccine.dataValues.inmunityDate, 'days').format('YYYY-MM-DD'),
+        inmunityDate:  moment().add(vaccine.dataValues.inmunityDate, 'days').format('YYYY-MM-DD'),
+        vaccinationDate:moment().format('YYYY-MM-DD'),
         nonceNumber: valueNonce,
     }
     

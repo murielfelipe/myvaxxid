@@ -4,6 +4,7 @@ import './css/base.css';
 import Camera from './camera';
 import QRCode from "react-qr-code";
 import QrReader from 'react-qr-reader'
+import moment from 'moment'
 
 import Ws from './../webservice';
 
@@ -23,7 +24,10 @@ class Checker extends React.Component {
             valueuser: "",
             valuelotnumber: "",
             errorClass: "",
-
+            imagebg: "normal",
+            status: "",
+            patient: null,
+            vaccinationDate: "",
             // end form
             showCamera: false,
             result: 'No result',
@@ -37,6 +41,7 @@ class Checker extends React.Component {
         this.onClickReader = this.onClickReader.bind(this);
 
         this.refImage = React.createRef();
+        this.refImageBack = React.createRef();
 
     }
 
@@ -77,68 +82,82 @@ class Checker extends React.Component {
             },()=>{
                 Ws('checker/vaccine', {token: data}).then(response => {
 
-                    if (response.photo) {
+                    if (response.patient && response.photo) {
                         this.refImage.current.src = response.photo
                     } else {
                         this.refImage.current.src = 'img/photo.jpg'
                     }
 
-                    if (response.patient) {
-                        this.setState({ name: response.patient.name })
+                    if (response.patient && response.isValid) {
+
+
+
+                        this.setState({ 
+                            patient: response.patient,
+                            name: response.patient.name,
+                            imagebg: 'approved',
+                            status: 'Approved',
+                            vaccinationDate: moment(response.patient.vaccinationDate, 'YYYY-MM-DD').format('LL')
+                        })
+                    } else if(response.patient && !response.isValid){
+                        this.setState({ 
+                            patient: response.patient,
+                            name: response.patient.name,
+                            name: response.patient.name,
+                            imagebg: 'waiting',
+                            status: 'Waiting',
+                        })
+
+
                     } else {
-                        this.setState({ name: 'Error: Passport not found. If you believe you got this message in error please contact 1-800-555-5555', errorClass: 'error-patient' })
+                        this.setState({ 
+                            patient: null,
+                            name: 'Error: Passport not found. If you believe you got this message in error please contact 1-800-555-5555', 
+                            errorClass: 'error-patient',
+                            imagebg: 'rejected',
+                            status: 'Rejected',
+
+                        })
                     }
 
                 })
 
             })
-
         }
     }
 
 
     render() {
         return (
-            <Container>
+            <div>
                 
-              <Row>
-
-                <Col md="5">
-
-                    <div className="pharmacist-form" >
 
 
-                        <Form className="form-patient">
-                            <p className="subtitle">Patient</p>
-                            <p><b>Patient: </b>{this.state.name} </p>
-                            <br/>
-                            <br/>
-                            
-                        </Form>
+                <div className="checker-photo">
+
+                    <img ref={this.refImageBack} src={`img/${this.state.imagebg}.png`} className="checker-img-back" /> 
 
 
+                    <div className={"checker-form " + this.state.status} >
+                        <p><b>Patient: </b>{this.state.name} </p>
+                        <p><b>Status: </b><span className="checker-status">{this.state.status}</span> </p>
+                        {this.state.patient && this.state.status != 'Waiting'?<p><b>Vaccination date: </b>{this.state.vaccinationDate} </p>: null}
+                        {this.state.patient && this.state.status == 'Waiting'? <p>Date of immunity not arrived. Please inform the user to come back at <b>({moment(this.state.patient.inmunityDate, 'YYYY-MM-DD').format('LL')})</b></p> : null}
                     </div>
 
-                </Col>
 
-                <Col md="6" className="pharmacist-photo">
+                    <img ref={this.refImage} src="img/photo.jpg" className="checker-img" /> 
 
-                    {this.state.name? 
-                    <div className={ 'pharmacist-check ' + this.state.errorClass} >
-                    </div>:null}
+                    {this.state.patient? <QRCode className="checker-qr" size={60} value={this.state.patient.nonceNumber} />: null}
 
+                </div>
 
-                    <img ref={this.refImage} src="img/photo.jpg" className="pharmacist-img" /> 
-
-                    <div className="pharmacist-buttons">
-                        <Button variant="primary" type="submit" onClick={this.onClickReader} title="Reader Qr" >
-                            <span className="material-icons">qr_code_scanner</span>
+                  <div className="checker-buttons">
+                        <Button variant="primary" type="submit" onClick={this.onClickReader} title="Reader Qr" block>
+                            <span className="material-icons">qr_code_scanner</span> Scan QR Now
                         </Button>
                     </div>
 
-                </Col>
-
-            </Row>
 
             <br/>
             <br/>
@@ -148,7 +167,7 @@ class Checker extends React.Component {
                     <Modal.Header closeButton>
                         <Modal.Title>Take Picture</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body className="pharmacist-dialog">
+                    <Modal.Body className="checker-dialog">
 
                         <QrReader
                           delay={300}
@@ -162,7 +181,7 @@ class Checker extends React.Component {
                         <Button variant="secondary" onClick={this.handleCloseCamera} >Close</Button>
                     </Modal.Footer>
                 </Modal>
-            </Container>
+            </div>
         );
     }
 }
