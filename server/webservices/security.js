@@ -50,7 +50,7 @@ router.post('/login', (req, res) => {
 
   res.send({
     token,
-    rol: username === 'client1' ? 'patient': 'check'
+    rol: username === '' ? 'patient': 'check'
   })
 })
 
