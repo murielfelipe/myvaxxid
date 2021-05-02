@@ -10,8 +10,8 @@ class Login extends React.Component {
         super(props);
         this.state = {
             valueuser: "",
-            // valueuser: "client1",
-            valuepassword: "client1",
+            // valueuser: "",
+            valuepassword: "",
             showAlertLogin: false,
         }
         this.validateUser = this.validateUser.bind(this);
